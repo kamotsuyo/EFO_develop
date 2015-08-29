@@ -1,13 +1,38 @@
 <DOCTYPE html>
 
-  <head>
-    <title>EFO develop</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1.0">
-    <script src="main.js"></script>
-    <meta name="description" content="スマートフォン用にテストしようと思っています"/>
-  </head>
+    <head>
+        <title>EFO develop</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0">
+        <script src="main.js"></script>
+        <meta name="description" content="スマートフォン用にテストしようと思っています" />
+        <link rel="stylesheet" type="text/css" href="efo.css">
+    </head>
 
-  <body>
-    <h1>EFO develop</h1>
-  </body>
+    <body>
+        <h1>EFO develop</h1>
+        <h2>dlを使ったフォーム</h2>
+        <form action="#" method="post" />
+        <div id="form">
+            <dl>
+                <dt>
+                    <label for="input_name">お名前</label>
+                </dt>
+                <dd>
+                    <input type="text" name="namae" id="input_name" required />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="input_phone">電話番号</label>
+                </dt>
+                <dd>
+                    <input type="text" name="phone" id="input_phone" />
+                </dd>
+            </dl>
+            <dl>
+                <input type="submit" value="送信"/>
+            </dl>
+        </div>
+        </form>
+    </body>
