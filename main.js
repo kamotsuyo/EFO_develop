@@ -1,49 +1,76 @@
+/*
+サンドボックスパターン
+main.startupから始まる
+---------------------
+main
+2015/8/29 ver1.00
+*/
 (function() {
     "use strict";
-    var Smart = function() {
-        this.name = "smart";
-        document.main.log(this.name);
-
-    };
-    Smart.prototype = {
-
-    };
-
-    function f() {
-
-    }
-
     var Main = function() {
 
     };
     Main.prototype = {
-        handleEvent: function(evt) {
-            this.log(evt);
+        handleEvent:function(evt){
+            switch (evt.type) {
+                case "scriptsLoaded":
+                    console.log(evt.type);
+                    console.log("すべてのスクリプトが読み込み完了した");
+                    var _ = Eldra; //名前空間を変数に代入しておく。（未定義エラーの回避）
+                    var test1 = new _.Test1();
+                    console.log(test1.get());
+
+                    break;
+                default:
+
+            }
         },
-        dispatchEvent: function(newType, targetElm) {
-            var newEvent = document.createEvent("Event");
-            newEvent.initEvent(newType, true, true);
-            targetElm.addEventListener(newType, this, false);
-            targetElm.dispatchEvent(newEvent);
+        startup: function() {
+            //ここに記述
+            this.include(["test1.js","test2.js"]);
         },
-        log: function() {
+        parseDom: function(text) {
+            var dom = document.createElement('dom');
+            dom.innerHTML = text;
+            return dom;
+        },
+        dispatchEvent: function(newtype, targetElement) {
+            var evt = document.createEvent("Event");
+            evt.initEvent(newtype, true, true);
+            targetElement.addEventListener(newtype, this, false);
+            targetElement.dispatchEvent(evt);
+        },
+        include:function(list){
+            console.log(this);
             var counter = 0;
-            return function(msg) {
-                console.log("-------" + (counter++) + "------");
-                console.log(msg);
+            var callback = function(evt){
+                // console.log(evt.target);
+                console.log(this);
+                counter++;
+                if(list.length===counter){
+                    //今回targetElementは利用しないのでdocumentとしておく。
+                    this.dispatchEvent("scriptsLoaded",document);
+                }
             };
-        }()
+            for(var i=0;i<list.length;i++){
+                var s = document.getElementsByTagName("script")[0];
+                var script = document.createElement('script');
+                script.src = list[i];
+
+                var _this=this; //***
+                script.addEventListener('load',function(){
+                    callback.call(_this);
+                },false);
+                s.parentNode.insertBefore(script, s);
+            }
+        }
     };
 
-    function init() {
-        document.main = new Main();
-        var p = document.createElement('p');
-        var smart = new Smart();
-        document.main.dispatchEvent("hoge", p);
-    }
     if (document.addEventListener) {
-        document.addEventListener('DOMContentLoaded', init, false);
-    } else {
-        alert("IE９以降でどうぞ");
+        document.addEventListener('DOMContentLoaded', function() {
+            new Main().startup();
+        }, false);
+    }else{
+        alert("他のブラウザかIE９以降でごらんください。");
     }
 }());
