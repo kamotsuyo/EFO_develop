@@ -1,0 +1,9 @@
+div#form{
+    display:table;
+}
+dl{
+    display:table-row;
+}
+dt,dd{
+    display:table-cell;
+}
