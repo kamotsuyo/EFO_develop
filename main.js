@@ -3,7 +3,7 @@
 main.startupから始まる
 ---------------------
 main
-2015/8/29 ver1.00
+2015/8/29 ver1.02
 */
 (function() {
     "use strict";
@@ -14,11 +14,8 @@ main
         handleEvent:function(evt){
             switch (evt.type) {
                 case "scriptsLoaded":
-                    console.log(evt.type);
                     console.log("すべてのスクリプトが読み込み完了した");
-                    var _ = Eldra; //名前空間を変数に代入しておく。（未定義エラーの回避）
-                    var test1 = new _.Test1();
-                    console.log(test1.get());
+                    this.run();
 
                     break;
                 default:
@@ -27,7 +24,16 @@ main
         },
         startup: function() {
             //ここに記述
-            this.include(["test1.js","test2.js"]);
+            this.include(["EFOLAB.Masquerade.js"]);
+        },
+        run:function(){
+            var _ = EFOLAB; //名前空間を変数に代入しておく。（未定義エラーの回避）
+            var masq = new _.Masquerade(this);
+            masq.init();
+
+            //test
+            var input_name = document.getElementById('input_name');
+            input_name.addEventListener("focus",masq,false);
         },
         parseDom: function(text) {
             var dom = document.createElement('dom');
@@ -41,11 +47,8 @@ main
             targetElement.dispatchEvent(evt);
         },
         include:function(list){
-            console.log(this);
             var counter = 0;
             var callback = function(evt){
-                // console.log(evt.target);
-                console.log(this);
                 counter++;
                 if(list.length===counter){
                     //今回targetElementは利用しないのでdocumentとしておく。
